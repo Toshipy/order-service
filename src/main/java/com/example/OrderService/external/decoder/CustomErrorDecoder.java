@@ -1,7 +1,7 @@
-package com.example.OrderService.external.client.decoder;
+package com.example.OrderService.external.decoder;
 
 import com.example.OrderService.exception.CustomException;
-import com.example.OrderService.external.client.response.ErrorResponse;
+import com.example.OrderService.external.response.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Response;
 import feign.codec.ErrorDecoder;
