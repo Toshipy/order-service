@@ -5,6 +5,7 @@ import com.example.OrderService.exception.CustomException;
 import com.example.OrderService.external.client.PaymentService;
 import com.example.OrderService.external.client.ProductService;
 import com.example.OrderService.external.request.PaymentRequest;
+import com.example.OrderService.external.response.PaymentResponse;
 import com.example.OrderService.model.OrderRequest;
 import com.example.OrderService.model.OrderResponse;
 import com.example.OrderService.model.ProductResponse;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Service
 @Log4j2
@@ -95,11 +97,27 @@ public class OrderServiceImpl implements OrderService{
                 ProductResponse.class
         );
 
+        log.info("Getting Payment information from the payment Service");
+        PaymentResponse paymentResponse
+                = restTemplate.getForObject(
+                        "http://PAYMENT-SERVICE/payment/order/" + order.getId(),
+                PaymentResponse.class
+        );
+
         OrderResponse.ProductDetails productDetails
                 = OrderResponse.ProductDetails
                 .builder()
-                .productId(productResponse.getProductId())
+                .productId(Objects.requireNonNull(productResponse).getProductId())
                 .productName(productResponse.getProductName())
+                .build();
+
+        OrderResponse.PaymentDetails paymentDetails
+                = OrderResponse.PaymentDetails
+                .builder()
+                .paymentId(Objects.requireNonNull(paymentResponse).getPaymentId())
+                .paymentStatus(paymentResponse.getStatus())
+                .paymentMode(paymentResponse.getPaymentMode())
+                .paymentDate(paymentResponse.getPaymentDate())
                 .build();
 
         OrderResponse orderResponse = OrderResponse.builder()
@@ -108,6 +126,7 @@ public class OrderServiceImpl implements OrderService{
                 .orderStatus(order.getOrderStatus())
                 .amount(order.getAmount())
                 .productDetails(productDetails)
+                .paymentDetails(paymentDetails)
                 .build();
 
         return orderResponse;
