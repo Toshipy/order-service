@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
+import java.util.Objects;
 
 @Service
 @Log4j2
@@ -106,15 +107,15 @@ public class OrderServiceImpl implements OrderService{
         OrderResponse.ProductDetails productDetails
                 = OrderResponse.ProductDetails
                 .builder()
-                .productId(productResponse.getProductId())
+                .productId(Objects.requireNonNull(productResponse).getProductId())
                 .productName(productResponse.getProductName())
                 .build();
 
         OrderResponse.PaymentDetails paymentDetails
                 = OrderResponse.PaymentDetails
                 .builder()
-                .paymentId(paymentResponse.getPaymentId())
-                .status(paymentResponse.getStatus())
+                .paymentId(Objects.requireNonNull(paymentResponse).getPaymentId())
+                .paymentStatus(paymentResponse.getStatus())
                 .paymentMode(paymentResponse.getPaymentMode())
                 .paymentDate(paymentResponse.getPaymentDate())
                 .build();

@@ -35,13 +35,10 @@ public class OrderResponse {
     @NoArgsConstructor
     @Builder
     public static class PaymentDetails {
-
         private long paymentId;
-        private String status;
+        private String paymentStatus;
         private PaymentMode paymentMode;
-        private long amount;
         private Instant paymentDate;
-        private long orderId;
 
     }
 
