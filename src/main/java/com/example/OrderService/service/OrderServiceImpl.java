@@ -97,12 +97,18 @@ public class OrderServiceImpl implements OrderService{
                 ProductResponse.class
         );
 
+        PaymentResponse paymentResponse = null;
         log.info("Getting Payment information from the payment Service");
-        PaymentResponse paymentResponse
-                = restTemplate.getForObject(
-                        "http://PAYMENT-SERVICE/payment/order/" + order.getId(),
-                PaymentResponse.class
-        );
+        try {
+            paymentResponse
+                    = restTemplate.getForObject(
+                    "http://PAYMENT-SERVICE/payment/order/" + order.getId(),
+                    PaymentResponse.class
+            );
+        } catch (Exception e) {
+            log.info("Payment not found with Order id: {}", orderId);
+            throw new CustomException("Payment not found with Order id: " + orderId, "PAYMENT_NOT_FOUND", 404);
+        }
 
         OrderResponse.ProductDetails productDetails
                 = OrderResponse.ProductDetails
